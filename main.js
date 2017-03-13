@@ -15,18 +15,19 @@
 var gl;
 
 //Data Buffers
-var colors = [];
 
-var points = 
+
+
+var cubeVerts = 
 [
-	[ 0.5, 0.5, 0.5, 1], //0
-	[ 0.5, 0.5,-0.5, 1], //1
-	[ 0.5,-0.5, 0.5, 1], //2
-	[ 0.5,-0.5,-0.5, 1], //3
-	[-0.5, 0.5, 0.5, 1], //4
-	[-0.5, 0.5,-0.5, 1], //5
-	[-0.5,-0.5, 0.5, 1], //6
-	[-0.5,-0.5,-0.5, 1], //7	
+	[ 0.5, 0.5, 0.5, 1], //0 b t r
+	[ 0.5, 0.5,-0.5, 1], //1 f t r
+	[ 0.5,-0.5, 0.5, 1], //2 b b r
+	[ 0.5,-0.5,-0.5, 1], //3 f b r
+	[-0.5, 0.5, 0.5, 1], //4 b t l
+	[-0.5, 0.5,-0.5, 1], //5 f t l
+	[-0.5,-0.5, 0.5, 1], //6 b b l
+	[-0.5,-0.5,-0.5, 1], //7 f b l
 ];
 var elements = [
 	0,4,6, //front
@@ -42,12 +43,10 @@ var elements = [
 	6,7,3, //bottom
 	6,3,2,
 ];
-
-
-for (var i = 0; i <  36; i++)
+var points = [];
+for (var i =0; i < elements.length; i++)
 {
-	points.push(points[elements[i]]);
-
+	points.push(cubeVerts[elements[i]]);
 }
 
 var red = 		 [1.0, 0.0, 0.0, 1.0];
@@ -56,23 +55,22 @@ var blue = 		 [0.0, 0.0, 1.0, 1.0];
 var lightred =   [1.0, 0.5, 0.5, 1.0];
 var lightgreen = [0.5, 1.0, 0.5, 1.0];
 var lightblue =  [0.5, 0.5, 1.0, 1.0];
-var white = 	 [1.0, 1.0, 1.0, 1.0];
+var White = 	 [1.0, 1.0, 1.0, 1.0];
 
 var colors = [
-
-	blue, blue, blue, red, red, red,
-	green, green, green, red, red, red,
-	red, red, red, red, red, red,
-	red, red, red, red, red, red,
-	red, red, red, red, red, red,
-	red, red, red, red, red, red,
-
-	/*lightblue, lightblue, lightblue, lightblue, lightblue, lightblue,
-	lightgreen, lightgreen, lightgreen, lightgreen, lightgreen, lightgreen,
-	lightred, lightred, lightred, lightred, lightred, lightred,
-	blue, blue, blue, blue, blue, blue,
-	red, red, red, red, red, red,
-	green, green, green, green, green, green,*/
+	red, red, red, 
+	red, red, red, 
+	White, White, White, 
+	White, White, White, 
+	blue, blue, blue,	
+	blue, blue, blue,
+	lightgreen, lightgreen, lightgreen, 
+	lightgreen, lightgreen, lightgreen, 
+	White, White, White, 
+	blue, blue, blue,
+	lightgreen, lightgreen, lightgreen, 	
+	red, red, red,
+	
 ];
 
 //Variables for Transformation Matrices
@@ -116,6 +114,7 @@ window.onload = function init() {
 	gl.vertexAttribPointer( program.vPosition, 4, gl.FLOAT, gl.FALSE, 0, 0 );
 	gl.enableVertexAttribArray( program.vPosition );
 
+	//***Colors***
 	var colorBuffer = gl.createBuffer();
 	gl.bindBuffer( gl.ARRAY_BUFFER, colorBuffer );
 	gl.bufferData( gl.ARRAY_BUFFER,  flatten(colors), gl.STATIC_DRAW );
@@ -127,67 +126,68 @@ window.onload = function init() {
 	//Only one elements buffer may be active at once
 	//It controls order of access to all array buffers
 	//Details are specified at draw time rather than with a pointer call
-	elementBuffer = gl.createBuffer();
-	gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, elementBuffer );
-	gl.bufferData( gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(elements), gl.STATIC_DRAW );
+	
+	//---------------
+	//DrawElements
+	//---------------
+	//elementBuffer = gl.createBuffer();
+	//gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, elementBuffer );
+	//gl.bufferData( gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(elements), gl.STATIC_DRAW );
 
 
-	// Get addresses of shader uniforms
+
 	projLoc = gl.getUniformLocation(program, "p");
 	mvLoc = gl.getUniformLocation(program, "mv");
 
 
-	//Set up viewport
+
 	canvas.width = canvas.clientWidth;
 	canvas.height = canvas.clientHeight;
-	gl.viewport(0, 0, canvas.width, canvas.height);
-
-	//Set up projection matrix
-	p = perspective(60.0, canvas.clientWidth/canvas.clientHeight, 0.1, 1000.0);
+	gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+	p = perspective(45.0, canvas.clientWidth/canvas.clientHeight, 0.1, 1000.0);
 	gl.uniformMatrix4fv(projLoc, gl.FALSE, flatten(p));
 
-	document.onkeypress = keypress;
+	document.onkeypress = keypress;//listen keyboard event
+	document.onmousemove = mouseMove; //listen mouse coordinator
+	
 	requestAnimFrame(render);
 	
 };
 
 
 
-var r = 0;
+
 var verticalMove = 0;
 var horizontalMove = 0;
+var mouseX = 0;
+var mouseY = 0;
 
 
 
 
-//----------------------------------------------------------------------------
-// Rendering Event Function
-//----------------------------------------------------------------------------
-function render() {
-	//Set up viewport
-	canvas.width = canvas.clientWidth;
-	canvas.height = canvas.clientHeight;
-	gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-
-	//Set up projection matrix
-	p = perspective(45.0, canvas.clientWidth/canvas.clientHeight, 0.1, 1000.0);
-	gl.uniformMatrix4fv(projLoc, gl.FALSE, flatten(p));
-
+function render() 
+{
 	gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
 
-	//Set initial view
+
 	var eye = vec3(horizontalMove, 0 , verticalMove);
-	var at =  vec3(horizontalMove, 0.0, 0.0);
+	var at =  vec3(horizontalMove+mouseX, mouseY, 0.0);
 	var up =  vec3(0.0, 1.0, 0.0);
-	r += 0.5; 
+	
 	mv = lookAt(eye,at,up);
-	//mv = mult(mv, rotateX(r));
-	//mv = mult(mv, rotateY(r));
+	
+	
 
 	gl.uniformMatrix4fv(mvLoc, gl.FALSE, flatten(mv));	
-	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, elementBuffer);
-	gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
+	gl.drawArrays(gl.TRIANGLES, 0, 36);
 
+	//---------------
+	//DrawElements
+	//---------------
+	//gl.uniformMatrix4fv(mvLoc, gl.FALSE, flatten(mv));	
+	//gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, elementBuffer);
+	//gl.drawElements(gl.TRIANGLE_STRIP, 36, gl.UNSIGNED_SHORT, 0);
+	//gl.drawArrays(gl.TRIANGLES, 0, 36);
 
 	requestAnimFrame(render);
 }
@@ -219,3 +219,28 @@ function keypress(e)
 		break;
 	}
 }
+
+function mouseMove(ev) 
+{ 
+Ev= ev || window.event; 
+var mousePos = mouseCoords(ev); 
+var myx = mousePos.x; 
+var myy = mousePos.y; 
+
+mouseX = Math.round((myx - canvas.clientWidth/2)/80);
+mouseY = Math.round(-(myy - canvas.clientHeight/2)/80);
+ 
+} 
+
+function mouseCoords(ev) 
+{ 
+if(ev.pageX || ev.pageY)
+{ 
+return {x:ev.pageX, y:ev.pageY}; 
+} 
+return{ 
+x:ev.clientX + document.body.scrollLeft - document.body.clientLeft, 
+y:ev.clientY + document.body.scrollTop - document.body.clientTop 
+}; 
+}
+
