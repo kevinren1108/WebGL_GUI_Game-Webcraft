@@ -144,7 +144,10 @@ window.onload = function init() {
 	canvas.width = canvas.clientWidth;
 	canvas.height = canvas.clientHeight;
 	gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-	p = perspective(45.0, canvas.clientWidth/canvas.clientHeight, 0.1, 1000.0);
+	
+	//p = perspective(45.0, canvas.clientWidth/canvas.clientHeight, 0.1, 1000.0);
+	p = ortho(-4,4,-4,4,2,13)
+	
 	gl.uniformMatrix4fv(projLoc, gl.FALSE, flatten(p));
 
 	document.onkeypress = keypress;//listen keyboard event
@@ -170,17 +173,27 @@ function render()
 	gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
 
 
-	var eye = vec3(horizontalMove, 0 , verticalMove);
+/* 	var eye = vec3(horizontalMove, 0 , verticalMove);
 	var at =  vec3(horizontalMove+mouseX, mouseY, 0.0);
+	var up =  vec3(0.0, 1.0, 0.0); */
+	
+	var eye = vec3(0, 0 , 10);
+	var at =  vec3(0, 0, 0.0);
 	var up =  vec3(0.0, 1.0, 0.0);
 	
 	mv = lookAt(eye,at,up);
 	
 	
-
-	gl.uniformMatrix4fv(mvLoc, gl.FALSE, flatten(mv));	
+	var bar = mult(mv, translate(mouseX,0,0));
+	bar = mult(bar, scale(1,0.3,1));
+	gl.uniformMatrix4fv(mvLoc, gl.FALSE, flatten(bar));	
 	gl.drawArrays(gl.TRIANGLES, 0, 36);
-
+	
+	
+	
+	
+	
+	console.log(mouseX);
 	//---------------
 	//DrawElements
 	//---------------
@@ -227,8 +240,8 @@ var mousePos = mouseCoords(ev);
 var myx = mousePos.x; 
 var myy = mousePos.y; 
 
-mouseX = Math.round((myx - canvas.clientWidth/2)/80);
-mouseY = Math.round(-(myy - canvas.clientHeight/2)/80);
+mouseX = Math.round((myx - canvas.clientWidth/2)/100);
+mouseY = Math.round(-(myy - canvas.clientHeight/2)/6);
  
 } 
 
