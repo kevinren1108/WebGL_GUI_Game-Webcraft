@@ -49,6 +49,8 @@ for (var i =0; i < elements.length; i++)
 	points.push(cubeVerts[elements[i]]);
 }
 
+
+
 var red = 		 [1.0, 0.0, 0.0, 1.0];
 var green = 	 [0.0, 1.0, 0.0, 1.0];
 var blue = 		 [0.0, 0.0, 1.0, 1.0];
@@ -72,6 +74,19 @@ var colors = [
 	red, red, red,
 	
 ];
+
+points.push([ 2.0, 0.0, 0.0, 1.0]); //x axis is green
+colors.push(red);
+points.push([-2.0, 0.0, 0.0, 1.0]);
+colors.push(red);
+points.push([ 0.0, 2.0, 0.0, 1.0]); //y axis is red
+colors.push(green);
+points.push([ 0.0,-2.0, 0.0, 1.0]); 
+colors.push(green);
+points.push([ 0.0, 0.0, 2.0, 1.0]); //z axis is blue
+colors.push(blue);
+points.push([ 0.0, 0.0,-2.0, 1.0]);
+colors.push(blue);
 
 //Variables for Transformation Matrices
 var mv = new mat4();
@@ -145,8 +160,8 @@ window.onload = function init() {
 	canvas.height = canvas.clientHeight;
 	gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
 	
-	//p = perspective(45.0, canvas.clientWidth/canvas.clientHeight, 0.1, 1000.0);
-	p = ortho(-4,4,-4,4,2,13)
+	p = perspective(45.0, canvas.clientWidth/canvas.clientHeight, 0.1, 1000.0);
+	//p = ortho(-4,4,-4,4,2,13)
 	
 	gl.uniformMatrix4fv(projLoc, gl.FALSE, flatten(p));
 
@@ -160,10 +175,11 @@ window.onload = function init() {
 
 
 
-var verticalMove = 0;
-var horizontalMove = 0;
 var mouseX = 0;
 var mouseY = 0;
+
+var charPos = vec3(0,0,0);
+var lookDir = [0,0];
 
 
 
@@ -172,28 +188,28 @@ function render()
 {
 	gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
 
+//console.log("horizontal_Move = " + horizontalMove + " ,vertical_Move = " + verticalMove);
+//console.log("mouse_X = " + mouseX + " ,mouse_Y = " + mouseY);
 
-/* 	var eye = vec3(horizontalMove, 0 , verticalMove);
-	var at =  vec3(horizontalMove+mouseX, mouseY, 0.0);
-	var up =  vec3(0.0, 1.0, 0.0); */
-	
-	var eye = vec3(0, 0 , 10);
-	var at =  vec3(0, 0, 0.0);
+	var eye = vec3(charPos[0], charPos[1] , charPos[2]);
+	var at =  vec3(Math.sin(lookDir[0]+Math.PI/2)+charPos[0], 
+				   0+charPos[1], 
+				   -Math.cos(lookDir[0]+Math.PI/2)+charPos[2]);
 	var up =  vec3(0.0, 1.0, 0.0);
 	
 	mv = lookAt(eye,at,up);
 	
-	
-	var bar = mult(mv, translate(mouseX,0,0));
-	bar = mult(bar, scale(1,0.3,1));
-	gl.uniformMatrix4fv(mvLoc, gl.FALSE, flatten(bar));	
+gl.uniformMatrix4fv(mvLoc, gl.FALSE, flatten(mv));
+	gl.drawArrays(gl.LINES, 36, 6);	
+
+
+
+	gl.uniformMatrix4fv(mvLoc, gl.FALSE, flatten(mv));	
 	gl.drawArrays(gl.TRIANGLES, 0, 36);
+
+
+
 	
-	
-	
-	
-	
-	console.log(mouseX);
 	//---------------
 	//DrawElements
 	//---------------
@@ -210,24 +226,27 @@ function keypress(e)
 	var currKey=0,e=e||event;
 	currKey=e.keyCode||e.which||e.charCode;
 	
-	console.log(e.keyCode);
-	
 	switch (currKey)
 	{
 	case 119://key w 
 		
-		verticalMove -= 0.5;
+		//verticalMove -= 0.5;
+		charPos[0] += Math.sin(lookDir[0]+Math.PI/2);
+		charPos[2] += -Math.cos(lookDir[0]+Math.PI/2);
+		
 		break;
 	case 115://key s
 		
-		verticalMove += 0.5;
+		charPos[0] -= Math.sin(lookDir[0]+Math.PI/2);
+		charPos[2] -= -Math.cos(lookDir[0]+Math.PI/2);
+		
 		break;
 	case 97://key a
-		horizontalMove -= 0.5;
+		//horizontalMove -= 0.5;
 	
 		break;
 	case 100://key d
-		horizontalMove += 0.5;
+		//horizontalMove += 0.5;
 
 		break;
 	}
@@ -240,9 +259,17 @@ var mousePos = mouseCoords(ev);
 var myx = mousePos.x; 
 var myy = mousePos.y; 
 
-mouseX = Math.round((myx - canvas.clientWidth/2)/100);
-mouseY = Math.round(-(myy - canvas.clientHeight/2)/6);
+//mouseX = Math.round((myx - canvas.clientWidth/2)/80);
+//mouseY = Math.round(-(myy - canvas.clientHeight/2)/80);
+
+ var dx = mouseX - myx;
+ var dy = mouseY - myy;
  
+ lookDir[0] -= dx*.001;
+ lookDir[1] += dy*.001;
+ 
+ mouseX = myx;
+ mouseY = myy;
 } 
 
 function mouseCoords(ev) 
