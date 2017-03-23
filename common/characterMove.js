@@ -4,8 +4,13 @@ var mouseY = 0;
 var charPos = vec3(0,0,0);
 var lookDir = [0,0];
 
-var oC = document.getElementById('gl-canvas');
+
+
+//canvas = document.getElementById("gl-canvas");
+//console.log(camvasClientWidth);
+
  var mouse = {
+	
         //x = oC.width / 2,
         //y = oC.height / 2
 		//console.log(x+y);
@@ -17,9 +22,6 @@ Ev= ev || window.event;
 var mousePos = mouseCoords(ev); 
 var myx = mousePos.x; 
 var myy = mousePos.y; 
-
-//mouseX = Math.round((myx - canvas.clientWidth/2)/80);
-//mouseY = Math.round(-(myy - canvas.clientHeight/2)/80);
 
  var dx = mouseX - myx;
  var dy = mouseY - myy;

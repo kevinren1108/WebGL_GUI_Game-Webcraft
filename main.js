@@ -1,23 +1,5 @@
-/*
-* boxes.cpp
-* An exercise in positioning simple boxes using projection/modelview
-* matrices and standard transforms.
-*
-* Adapted for WebGL by Alex Clarke, 2016.
-*/
-
-
-//----------------------------------------------------------------------------
-// Variable Setup
-//----------------------------------------------------------------------------
-
-// This variable will store the WebGL rendering context
+var myWidth;
 var gl;
-
-//Data Buffers
-
-
-
 var cubeVerts = 
 [
 	[ 0.5, 0.5, 0.5, 1], //0 b t r
@@ -29,7 +11,9 @@ var cubeVerts =
 	[-0.5,-0.5, 0.5, 1], //6 b b l
 	[-0.5,-0.5,-0.5, 1], //7 f b l
 ];
-var elements = [
+
+var elements = 
+[
 	0,4,6, //front
 	0,6,2,
 	1,0,2, //right
@@ -43,14 +27,13 @@ var elements = [
 	6,7,3, //bottom
 	6,3,2,
 ];
+
 var points = [];
 
 for (var i =0; i < elements.length; i++)
 {
 	points.push(cubeVerts[elements[i]]);
 }
-
-
 
 var red = 		 [1.0, 0.0, 0.0, 1.0];
 var green = 	 [0.0, 1.0, 0.0, 1.0];
@@ -95,22 +78,22 @@ var p  = new mat4();
 var mvLoc, projLoc;
 
 var program;
-var canvas
+var canvas;
 var axesBuffer;
 var elementBuffer;
 //----------------------------------------------------------------------------
 // Initialization Event Function
 //----------------------------------------------------------------------------
-window.onload = function init() {
-	// Set up a WebGL Rendering Context in an HTML5 Canvas
+window.onload = function init()
+{
 	canvas = document.getElementById("gl-canvas");
+		
 	gl = WebGLUtils.setupWebGL(canvas);
-	if (!gl) {
+	if (!gl)
+	{
 	alert("WebGL isn't available");
 	}
 	
-	//charMove = new 
-
 	//  Configure WebGL
 	//  eg. - set a clear color
 	//      - turn on depth testing
@@ -161,6 +144,8 @@ window.onload = function init() {
 
 	canvas.width = canvas.clientWidth;
 	canvas.height = canvas.clientHeight;
+	
+	
 	gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
 	
 	p = perspective(45.0, canvas.clientWidth/canvas.clientHeight, 0.1, 1000.0);
@@ -168,19 +153,19 @@ window.onload = function init() {
 	
 	gl.uniformMatrix4fv(projLoc, gl.FALSE, flatten(p));
 
-	//document.onkeypress = keypress;//listen keyboard event
 	document.onmousemove = mouseMove; //listen mouse coordinator
 	
-	   requestAnimFrame(animate);
-	
+	requestAnimFrame(animate);
 };
+
+
+
 
 
 var prevTime = 0;
 function animate()
 {
     requestAnimFrame(animate);
-    
     //Do time corrected animation
     var curTime = new Date().getTime();
     if (prevTime != 0)
