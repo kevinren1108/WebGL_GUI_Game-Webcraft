@@ -168,13 +168,35 @@ window.onload = function init() {
 	
 	gl.uniformMatrix4fv(projLoc, gl.FALSE, flatten(p));
 
-	document.onkeypress = keypress;//listen keyboard event
+	//document.onkeypress = keypress;//listen keyboard event
 	document.onmousemove = mouseMove; //listen mouse coordinator
 	
-	
-	requestAnimFrame(render);
+	   requestAnimFrame(animate);
 	
 };
+
+
+var prevTime = 0;
+function animate()
+{
+    requestAnimFrame(animate);
+    
+    //Do time corrected animation
+    var curTime = new Date().getTime();
+    if (prevTime != 0)
+    {
+       //Calculate elapsed time in seconds
+       var timePassed = (curTime - prevTime)/1000.0;
+       //Update any active animations 
+       handleKeys(timePassed);
+    }
+    prevTime = curTime;
+    
+	
+    //Draw
+    render();
+}
+
 
 function render() 
 {
@@ -207,6 +229,6 @@ function render()
 	//gl.drawElements(gl.TRIANGLE_STRIP, 36, gl.UNSIGNED_SHORT, 0);
 	//gl.drawArrays(gl.TRIANGLES, 0, 36);
 
-	requestAnimFrame(render);
+
 }
 
