@@ -59,7 +59,8 @@ function handleKeys(timePassed)
    var s = 60.0; //degrees per second
    var d = s*timePassed; //degrees to rotate
    
-   
+   if(document.pointerLockElement)
+   {
    if (isPressed("S")) 
    {
 	   charPos[0] -= Math.sin(lookDir[0]+Math.PI/2) * 0.04 * d;
@@ -94,6 +95,7 @@ function handleKeys(timePassed)
    {
 		charPos[1] += 0.04* d;
    }
+   }
    
 }
 
@@ -103,7 +105,7 @@ function handleKeys(timePassed)
 //----------------------------------------------------------------------------
 function MouseMovement(canvas)
 {
-canvas.addEventListener('mousedown', function(e) 
+	canvas.addEventListener('mousedown', function(e) 
 	{
         canvas.requestPointerLock();
     }, false);
