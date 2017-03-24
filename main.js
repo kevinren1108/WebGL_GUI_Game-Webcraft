@@ -43,19 +43,25 @@ var lightgreen = [0.5, 1.0, 0.5, 1.0];
 var lightblue =  [0.5, 0.5, 1.0, 1.0];
 var White = 	 [1.0, 1.0, 1.0, 1.0];
 
+
 var colors = [
 	red, red, red, 
 	red, red, red, 
+	
 	White, White, White, 
 	White, White, White, 
+	
 	blue, blue, blue,	
 	blue, blue, blue,
+	
 	lightgreen, lightgreen, lightgreen, 
-	lightgreen, lightgreen, lightgreen, 
-	White, White, White, 
-	blue, blue, blue,
-	lightgreen, lightgreen, lightgreen, 	
-	red, red, red,
+	lightgreen, lightgreen, lightgreen,
+	
+	lightred, lightred, lightred, 
+	lightred, lightred, lightred,
+	
+	lightblue, lightblue, lightblue, 	
+	lightblue, lightblue, lightblue,
 	
 ];
 

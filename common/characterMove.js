@@ -1,8 +1,8 @@
 var mouseX = 0;
 var mouseY = 0;
 
-var charPos = vec3(0,0,0);
-var lookDir = [0,0];
+var charPos = vec3(-3,3,3);
+var lookDir = [-0.75,-0.75];
 
 
 //----------------------------------------------------------------------------
