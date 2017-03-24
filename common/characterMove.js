@@ -5,46 +5,6 @@ var charPos = vec3(0,0,0);
 var lookDir = [0,0];
 
 
-
-//canvas = document.getElementById("gl-canvas");
-//console.log(camvasClientWidth);
-
- var mouse = {
-	
-        //x = oC.width / 2,
-        //y = oC.height / 2
-		//console.log(x+y);
-    };
-
-function mouseMove(ev) 
-{ 
-Ev= ev || window.event; 
-var mousePos = mouseCoords(ev); 
-var myx = mousePos.x; 
-var myy = mousePos.y; 
-
- var dx = mouseX - myx;
- var dy = mouseY - myy;
- 
- lookDir[0] -= dx*.001;
- lookDir[1] += dy*.001;
- 
- mouseX = myx;
- mouseY = myy;
-} 
-
-function mouseCoords(ev) 
-{ 
-if(ev.pageX || ev.pageY)
-{ 
-return {x:ev.pageX, y:ev.pageY}; 
-} 
-return{ 
-x:ev.clientX + document.body.scrollLeft - document.body.clientLeft, 
-y:ev.clientY + document.body.scrollTop - document.body.clientTop 
-}; 
-}
-
 //----------------------------------------------------------------------------
 // Keyboard Event Functions
 //----------------------------------------------------------------------------
@@ -116,9 +76,6 @@ function handleKeys(timePassed)
    }
    if (isPressed("A")) 
    {
-	   
-		//charPos[2] -= 0.04* d;
-		
 		charPos[0] -= Math.cos(lookDir[0]+Math.PI/2) * 0.04 * d;
 		charPos[2] -= Math.sin(lookDir[0]+Math.PI/2) * 0.04 * d;
 		
@@ -126,9 +83,6 @@ function handleKeys(timePassed)
    }
    if (isPressed("D")) 
    {
-	   
-		//charPos[2] += 0.04* d;
-		
 		charPos[0] += Math.cos(lookDir[0]+Math.PI/2) * 0.04 * d;
 		charPos[2] += Math.sin(lookDir[0]+Math.PI/2) * 0.04 * d;
    }
@@ -141,4 +95,31 @@ function handleKeys(timePassed)
 		charPos[1] += 0.04* d;
    }
    
+}
+
+
+//----------------------------------------------------------------------------
+// Mouse Event Functions
+//----------------------------------------------------------------------------
+function MouseMovement(canvas)
+{
+canvas.addEventListener('mousedown', function(e) 
+	{
+        canvas.requestPointerLock();
+    }, false);
+	
+	canvas.addEventListener("mousemove", function(event) {
+
+        if(document.pointerLockElement) {
+
+             lookDir[0] += (event.movementX / 200);
+             lookDir[1] += (-event.movementY / 200);
+        }
+
+        if(lookDir[1] >= Math.PI/2) {
+            lookDir[1] = Math.PI/2;
+        } else if(lookDir[1] <= -Math.PI/2) {
+            lookDir[1] = -Math.PI/2;
+        }
+    }, false);
 }

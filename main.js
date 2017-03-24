@@ -94,6 +94,8 @@ window.onload = function init()
 	alert("WebGL isn't available");
 	}
 	
+	MouseMovement(canvas);
+	
 	//  Configure WebGL
 	//  eg. - set a clear color
 	//      - turn on depth testing
@@ -153,7 +155,7 @@ window.onload = function init()
 	
 	gl.uniformMatrix4fv(projLoc, gl.FALSE, flatten(p));
 
-	document.onmousemove = mouseMove; //listen mouse coordinator
+	//document.onmousemove = mouseMove; //listen mouse coordinator
 	
 	requestAnimFrame(animate);
 };
@@ -188,11 +190,11 @@ function render()
 	gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
 
 	var eye = vec3(charPos[0], charPos[1] , charPos[2]);
-	var at =  vec3(Math.sin(lookDir[0]+Math.PI/2)+charPos[0], 
-				   0+charPos[1], 
-				   -Math.cos(lookDir[0]+Math.PI/2)+charPos[2]);
+	var at =  vec3(0,0,0);
 	var up =  vec3(0.0, 1.0, 0.0);
-	
+	at[0] = Math.sin(lookDir[0]+Math.PI/2)+charPos[0];
+	at[1] = charPos[1] + lookDir[1];
+	at[2] = -Math.cos(lookDir[0]+Math.PI/2)+charPos[2];
 	mv = lookAt(eye,at,up);
 	
 	gl.uniformMatrix4fv(mvLoc, gl.FALSE, flatten(mv));
