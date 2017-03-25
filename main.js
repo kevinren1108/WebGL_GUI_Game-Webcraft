@@ -58,23 +58,23 @@ var texCoords =
 [
     //Texture Coordinates for Solid Cube
     //Note that each face is the same.
-    1, 1,	0, 1,	0, 0, // triangle 1
+    1, 1,	0, 1,	0, 0, // triangle 1 front top left
+    1, 1,	0, 0,	1, 0, // triangle 2 front bot right
+    
+    1, 1,	0, 1,	0, 0, // triangle 1 right
     1, 1,	0, 0,	1, 0, // triangle 2
     
-    1, 1,	0, 1,	0, 0, // triangle 1
+    1, 1,	0, 1,	0, 0, // triangle 1 back
     1, 1,	0, 0,	1, 0, // triangle 2
     
-    1, 1,	0, 1,	0, 0, // triangle 1
+    1, 1,	0, 1,	0, 0, // triangle 1 left
     1, 1,	0, 0,	1, 0, // triangle 2
     
-    1, 1,	0, 1,	0, 0, // triangle 1
-    1, 1,	0, 0,	1, 0, // triangle 2
+    0, 1,	1, 1,	1, 2, // triangle 1 top
+    0, 1,	1, 2,	0, 2, // triangle 2
     
-    1, 1,	0, 1,	0, 0, // triangle 1
-    1, 1,	0, 0,	1, 0, // triangle 2
-    
-    1, 1,	0, 1,	0, 0, // triangle 1
-    1, 1,	0, 0,	1, 0, // triangle 2
+    0, 1,	1, 1,	1, 2, // triangle 1 botton
+    0, 1,	1, 2,	0, 2, // triangle 2
 ];
 
 var red = 		 [1.0, 0.0, 0.0, 1.0];
