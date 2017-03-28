@@ -58,23 +58,23 @@ var texCoords =
 [
     //Texture Coordinates for Solid Cube
     //Note that each face is the same.
-    1, 0.5,	0,0.5,	0, 0, // triangle 1 front top left
-    1, 0.5,	0, 0,	1, 0, // triangle 2 front bot right
+    1, 1,	0, 1,	0, 0, // triangle 1 front top left
+    1, 1,	0, 0,	1, 0, // triangle 2 front bot right
     
-    1, 0.5,	0, 0.5,	0, 0, // triangle 1 right
-    1, 0.5,	0, 0,	1, 0, // triangle 2
+    1, 1,	0, 1,	0, 0, // triangle 1 right
+    1, 1,	0, 0,	1, 0, // triangle 2
     
-    1, 0.5,	0, 0.5,	0, 0, // triangle 1 back
-    1, 0.5,	0, 0,	1, 0, // triangle 2
+    1, 1,	0, 1,	0, 0, // triangle 1 back
+    1, 1,	0, 0,	1, 0, // triangle 2
     
-    1, 0.5,	0, 0.5,	0, 0, // triangle 1 left
-    1, 0.5,	0, 0,	1, 0, // triangle 2
+    1, 1,	0, 1,	0, 0, // triangle 1 left
+    1, 1,	0, 0,	1, 0, // triangle 2
     
-    0, 0.5,	1, 0.5,	1, 1, // triangle 1 top
-    0, 0.5,	1, 1,	0, 1, // triangle 2
+    0, 1,	1, 1,	1, 2, // triangle 1 top
+    0, 1,	1, 2,	0, 2, // triangle 2
     
-    0, 0.5,	1, 0.5,	1, 1, // triangle 1 botton
-    0, 0.5,	1, 1,	0, 1, // triangle 2
+    0, 1,	1, 1,	1, 2, // triangle 1 botton
+    0, 1,	1, 2,	0, 2, // triangle 2
 ];
 
 var red = 		 [1.0, 0.0, 0.0, 1.0];
@@ -223,9 +223,9 @@ window.onload = function init()
         }
         else //disable all other lights
         {
-            gl.uniform4fv(light[i].diffuse, vec4(0.2, 0.2, 0.2, 1.0));
-            gl.uniform4fv(light[i].ambient, vec4(0.2, 0.2, 0.2, 1.0));
-            gl.uniform4fv(light[i].position,vec4(0.2, 0.2, 0.2, 1.0));
+            gl.uniform4fv(light[i].diffuse, black);
+            gl.uniform4fv(light[i].ambient, black);
+            gl.uniform4fv(light[i].position,black);
         }
     }
     
@@ -269,7 +269,7 @@ function animate()
     render();
 }
 
-var sunAngle = 90;
+var sunAngle = 0;
 function render() 
 {
 	gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
@@ -292,38 +292,6 @@ function render()
 	var cube = mult(mv, translate(0,0,0));
 	gl.uniformMatrix4fv(mvLoc, gl.FALSE, flatten(cube));	
 	gl.drawArrays(gl.TRIANGLES, 0, 36);
-	
-	var cube1 = mult(mv, translate(1,0,1)); 
-	gl.uniformMatrix4fv(mvLoc, gl.FALSE, flatten(cube1));	
-	gl.drawArrays(gl.TRIANGLES, 0, 36);
-	
-	var cube2 = mult(mv, translate(1,0,-1));
-	gl.uniformMatrix4fv(mvLoc, gl.FALSE, flatten(cube2));	
-	gl.drawArrays(gl.TRIANGLES, 0, 36);
-	
-	var cube3 = mult(mv, translate(-1,0,1));
-	gl.uniformMatrix4fv(mvLoc, gl.FALSE, flatten(cube3));	
-	gl.drawArrays(gl.TRIANGLES, 0, 36);
-	
-	var cube4 = mult(mv, translate(-1,0,-1));
-	gl.uniformMatrix4fv(mvLoc, gl.FALSE, flatten(cube4));	
-	gl.drawArrays(gl.TRIANGLES, 0, 36);
-	
-	var cube5 = mult(mv, translate(-1,1,0));
-	gl.uniformMatrix4fv(mvLoc, gl.FALSE, flatten(cube5));	
-	gl.drawArrays(gl.TRIANGLES, 0, 36);
-	
-	var cube6 = mult(mv, translate(0,1,-1));
-	gl.uniformMatrix4fv(mvLoc, gl.FALSE, flatten(cube6));	
-	gl.drawArrays(gl.TRIANGLES, 0, 36);
-	
-	var cube7 = mult(mv, translate(1,1,-2));
-	gl.uniformMatrix4fv(mvLoc, gl.FALSE, flatten(cube7));	
-	gl.drawArrays(gl.TRIANGLES, 0, 36);
-	
-	var cube8 = mult(mv, translate(-1,2,-1));
-	gl.uniformMatrix4fv(mvLoc, gl.FALSE, flatten(cube8));	
-	gl.drawArrays(gl.TRIANGLES, 0, 36);
 
 	var sun = mult(mv, rotateZ(sunAngle));
 	sun =  mult(sun, translate(0,50,0));
@@ -336,9 +304,9 @@ function render()
 	sunAngle = sunAngle % 360;
 	if(sunAngle > 90 && sunAngle<270)
 	{
-		gl.uniform4fv(light[0].diffuse, white);
-        gl.uniform4fv(light[0].ambient, white);
-		gl.uniform4fv(light[0].specular,white);	
+		gl.uniform4fv(light[0].diffuse, dark);
+        gl.uniform4fv(light[0].ambient, dark);
+		gl.uniform4fv(light[0].specular,dark);	
 	}
 	else
 	{

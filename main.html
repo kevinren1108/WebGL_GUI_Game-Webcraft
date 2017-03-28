@@ -1,79 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>webcraft</title>
+    <title>Boxes</title>
 
 	<style>
-			html 
-			{
-				box-sizing: border-box;
-				height: 100%;
-			}
+		html {
+  box-sizing: border-box;
+  height: 100%;
+}
 
-			body 
-			{
-				height: 100%;
-				margin: 0;
-				font-family: Helvetica, Arial, Sans-Serif;
-			}
+body {
+    height: 100%;
+    margin: 0;
+    font-family: Helvetica, Arial, Sans-Serif;
+}
 
-			canvas 
-			{
-				width: 100%;
-				height: 100%;
-				display: block;
-			}
-			 .aim 
-			 {
-				position: absolute;
-				width: 56px;
-				height: 56px;
-				left: 50%;
-				top: 50%;
-				background-image: url(./Data/aim.png);
-				pointer-events: none;
-				transform-origin: center center;
-				transform: translate(-50%, -50%) scale(.5, .5);
-        	}
-        	.heart
-        	{
-        		position: absolute;
-				width: 38px;
-				height: 40px;
-				left: 31%;
-				top: 88%;
-				background-image: url(./Data/heart.png);
-				pointer-events: none;
-				transform-origin: center center;
-				transform: translate(-50%, -50%) scale(.5, .5);
-				zoom: 2;
-        	}
-        	.hunger
-        	{
-        		position: absolute;
-				width: 40px;
-				height: 40px;
-				left: 69%;
-				top: 88%;
-				background-image: url(./Data/hunger.png);
-				pointer-events: none;
-				transform-origin: center center;
-				transform: translate(-50%, -50%) scale(.5, .5);
-				zoom: 2;
-        	}
-        	.hud
-        	{
-        		position: absolute;
-        		width: 810px;
-        		height: 89px;
-        		left: 50%;
-        		top : 95.3%;
-        		background-image: url(./Data/hud.png);
-				pointer-events: none;
-				transform-origin: center center;
-				transform: translate(-50%, -50%) scale(.5, .5);
-				zoom: 2;
-			}
+canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
 </style>
 
     <!-- This in-line script is a vertex shader resource
@@ -217,13 +164,12 @@ vec4 lightCalc(in _light light, inout vec4 specular)
 </head>
 
 <body>
+    <!-- This is the canvas - the only HTML element that can render WebGL 
+         graphics. You can have more than one WebGL canvas on a web page, but
+         that gets tricky. Stick to one per page for now. -->
     <canvas id="gl-canvas" style="width: 100%; height: 100%;">
         Oops ... your browser doesn't support the HTML5 canvas element
     </canvas>
-    <div class="aim"></div>
-    <div class="heart"></div>
-    <div class="hunger"></div>
-    <div class="hud"></div>
 	<img src="Data/ground.png" id="pic1" hidden />
 </body>
 </html>
