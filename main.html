@@ -1,212 +1,139 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>webcraft</title>
-
-	<style>
-			html 
-			{
-				box-sizing: border-box;
-				height: 100%;
-			}
-
-			body 
-			{
-				height: 100%;
-				margin: 0;
-				font-family: Helvetica, Arial, Sans-Serif;
-			}
-
-			canvas 
-			{
-				width: 100%;
-				height: 100%;
-				display: block;
-			}
-			 .aim 
-			 {
-				position: absolute;
-				width: 56px;
-				height: 56px;
-				left: 50%;
-				top: 50%;
-				background-image: url(./Data/aim.png);
-				pointer-events: none;
-				transform-origin: center center;
-				transform: translate(-50%, -50%) scale(.5, .5);
-        	}
-        	.heart
-        	{
-        		position: absolute;
-				width: 38px;
-				height: 40px;
-				left: 31%;
-				top: 88%;
-				background-image: url(./Data/heart.png);
-				pointer-events: none;
-				transform-origin: center center;
-				transform: translate(-50%, -50%) scale(.5, .5);
-				zoom: 2;
-        	}
-        	.hunger
-        	{
-        		position: absolute;
-				width: 40px;
-				height: 40px;
-				left: 69%;
-				top: 88%;
-				background-image: url(./Data/hunger.png);
-				pointer-events: none;
-				transform-origin: center center;
-				transform: translate(-50%, -50%) scale(.5, .5);
-				zoom: 2;
-        	}
-        	.hud
-        	{
-        		position: absolute;
-        		width: 810px;
-        		height: 89px;
-        		left: 50%;
-        		top : 95.3%;
-        		background-image: url(./Data/hud.png);
-				pointer-events: none;
-				transform-origin: center center;
-				transform: translate(-50%, -50%) scale(.5, .5);
-				zoom: 2;
-			}
-</style>
-
+    <title>WebCraft</title>
+    <link rel="stylesheet" href="main.css">
     <!-- This in-line script is a vertex shader resource
          Shaders can be linked from an external file as well. -->
     <script id="vertex-shader" type="x-shader/x-vertex">
-//diffuse and ambient multi-light shader
+      //diffuse and ambient multi-light shader
 
-//inputs
-attribute vec4 vPosition;
-attribute vec3 vNormal;
-attribute vec2 vTexCoord;
+      //inputs
+      attribute vec4 vPosition;
+      attribute vec3 vNormal;
+      attribute vec2 vTexCoord;
 
-//outputs
-varying vec4 color;
-varying vec4 specular;
-varying vec2 texCoord;
+      //outputs
+      varying vec4 color;
+      varying vec4 specular;
+      varying vec2 texCoord;
 
-//structs
-struct _light
-{
-    vec4 diffuse;
-    vec4 specular;    
-    vec4 ambient;
-    vec4 position;
-};
+      //structs
+      struct _light
+      {
+          vec4 diffuse;
+          vec4 specular;
+          vec4 ambient;
+          vec4 position;
+      };
 
-struct _material
-{
-    vec4 specular;
-    float shininess;
-    vec4 diffuse;
-    vec4 ambient;
-};
+      struct _material
+      {
+          vec4 specular;
+          float shininess;
+          vec4 diffuse;
+          vec4 ambient;
+      };
 
-//constants
-const int n = 1; // number of lights
+      //constants
+      const int n = 1; // number of lights
 
-//uniforms
-uniform mat4 p;     // perspective matrix
-uniform mat4 mv;    // modelview matrix
-uniform bool lighting;  // to enable and disable lighting
-uniform vec4 uColor;    // colour to use when lighting is disabled
-uniform _light light[n]; // properties for the n lights
-uniform _material material; // material properties
+      //uniforms
+      uniform mat4 p;     // perspective matrix
+      uniform mat4 mv;    // modelview matrix
+      uniform bool lighting;  // to enable and disable lighting
+      uniform vec4 uColor;    // colour to use when lighting is disabled
+      uniform _light light[n]; // properties for the n lights
+      uniform _material material; // material properties
 
-//globals
-vec4 mvPosition; // unprojected vertex position
-vec3 N; // fixed surface normal
+      //globals
+      vec4 mvPosition; // unprojected vertex position
+      vec3 N; // fixed surface normal
 
-//prototypes
-vec4 lightCalc(in _light light, inout vec4 specular);
+      //prototypes
+      vec4 lightCalc(in _light light, inout vec4 specular);
 
-void main() 
-{
-  //Transform the point
-  mvPosition = mv*vPosition;  //mvPosition is used often
-  gl_Position = p*mvPosition; 
+      void main()
+      {
+        //Transform the point
+        mvPosition = mv*vPosition;  //mvPosition is used often
+        gl_Position = p*mvPosition;
 
-  if (lighting == false) 
-  {
-	color = uColor;
-  }
-  else
-  {
-    //Make sure the normal is actually unit length, 
-    //and isolate the important coordinates
-    N = normalize((mv*vec4(vNormal,0.0)).xyz);
-    
-    //Combine colors from all lights
-    color.rgb = vec3(0,0,0);
-    specular.rgb = vec3(0,0,0);
-    for (int i = 0; i < n; i++)
-    {
-        color += lightCalc(light[i], specular);
-    }
-    color.a = 1.0; //Override alpha from light calculations
-    specular.a = 1.0;
-  }
-  texCoord = vTexCoord;
-}
+        if (lighting == false)
+        {
+      	color = uColor;
+        }
+        else
+        {
+          //Make sure the normal is actually unit length,
+          //and isolate the important coordinates
+          N = normalize((mv*vec4(vNormal,0.0)).xyz);
 
-vec4 lightCalc(in _light light, inout vec4 specular)
-{
-  //Set up light direction for positional lights
-  vec3 L;
-  
-  //If the light position is a vector, use that as the direction
-  if (light.position.w == 0.0) 
-    L = normalize(light.position.xyz);
-  //Otherwise, the direction is a vector from the current vertex to the light
-  else
-    L = normalize(light.position.xyz - mvPosition.xyz);
+          //Combine colors from all lights
+          color.rgb = vec3(0,0,0);
+          specular.rgb = vec3(0,0,0);
+          for (int i = 0; i < n; i++)
+          {
+              color += lightCalc(light[i], specular);
+          }
+          color.a = 1.0; //Override alpha from light calculations
+          specular.a = 1.0;
+        }
+        texCoord = vTexCoord;
+      }
 
-//Set up eye vector
-  vec3 E = -normalize(mvPosition.xyz);
+      vec4 lightCalc(in _light light, inout vec4 specular)
+      {
+        //Set up light direction for positional lights
+        vec3 L;
 
-  //Set up Blinn half vector
-  vec3 H = normalize(L+E); 
+        //If the light position is a vector, use that as the direction
+        if (light.position.w == 0.0)
+          L = normalize(light.position.xyz);
+        //Otherwise, the direction is a vector from the current vertex to the light
+        else
+          L = normalize(light.position.xyz - mvPosition.xyz);
 
-  //Calculate specular coefficient
-  float Ks = pow(max(dot(N, H),0.0), material.shininess);
-  //Calculate diffuse coefficient
-  float Kd = max(dot(L,N), 0.0);
+      //Set up eye vector
+        vec3 E = -normalize(mvPosition.xyz);
 
-  //Calculate colour for this light
-  vec4 color = Kd * material.diffuse * light.diffuse
-               + material.ambient * light.ambient;
-               
-  specular += Ks * material.specular*light.specular;
-  return color;
-}
+        //Set up Blinn half vector
+        vec3 H = normalize(L+E);
+
+        //Calculate specular coefficient
+        float Ks = pow(max(dot(N, H),0.0), material.shininess);
+        //Calculate diffuse coefficient
+        float Kd = max(dot(L,N), 0.0);
+
+        //Calculate colour for this light
+        vec4 color = Kd * material.diffuse * light.diffuse
+                     + material.ambient * light.ambient;
+
+        specular += Ks * material.specular*light.specular;
+        return color;
+      }
     </script>
 
     <!-- This in-line script is a fragment shader resource.
          Shaders can be linked from an external file as well. -->
     <script id="fragment-shader" type="x-shader/x-fragment">
     	precision mediump float;
-        
+
     	varying vec4 color;
         varying vec4 specular;
         varying vec2 texCoord;
-        
+
         uniform sampler2D tex;
-        
-    	void main() 
-    	{ 
+
+    	void main()
+    	{
             gl_FragColor = texture2D(tex, texCoord)*(color+specular);
     	}
     </script>
 
-    <!-- These are external javascript files. 
+    <!-- These are external javascript files.
          The first three are the textbook libraries.
-         The last one is your own javascript code. Make sure to change the name 
+         The last one is your own javascript code. Make sure to change the name
          to match your javascript file. -->
     <script type="text/javascript" src="Common/webgl-utils.js"></script>
     <script type="text/javascript" src="Common/initShaders.js"></script>
@@ -227,4 +154,3 @@ vec4 lightCalc(in _light light, inout vec4 specular)
 	<img src="Data/ground.png" id="pic1" hidden />
 </body>
 </html>
-
