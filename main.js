@@ -282,7 +282,51 @@ function render()
 	at[2] = -Math.cos(lookDir[0]+Math.PI/2)+charPos[2];
 	mv = lookAt(eye,at,up);
 	
-	var skyBox = mult(mv, scale(42,42,42));
+	world();
+	body(charPos[0],charPos[1],charPos[2]);
+	
+}
+
+function body(x,y,z)
+{
+	/*x= 0;
+	y=3;
+	z=3;
+	z=z-2;*/
+	
+	var body = mult(mv, translate(x,y-1,z));
+	body = mult(body, scale(0.6,0.6,0.5));
+	gl.uniformMatrix4fv(mvLoc, gl.FALSE, flatten(body));	
+	gl.drawArrays(gl.TRIANGLES, 0, 36);
+	
+	var leftArm = mult(mv, translate(x-1,y-1,z));
+	leftArm = mult(leftArm, scale(0.2,0.5,0.2));
+	leftArm = mult(leftArm, translate(3,0,0));
+	gl.uniformMatrix4fv(mvLoc, gl.FALSE, flatten(leftArm));	
+	gl.drawArrays(gl.TRIANGLES, 0, 36);
+	
+	var rightArm = mult(mv, translate(x+1,y-1,z));
+	rightArm = mult(rightArm, scale(0.2,0.5,0.2));
+	rightArm = mult(rightArm, translate(-3,0,0));
+	gl.uniformMatrix4fv(mvLoc, gl.FALSE, flatten(rightArm));	
+	gl.drawArrays(gl.TRIANGLES, 0, 36);
+	
+	var leftLeg = mult(mv, translate(x,y-2.2,z));
+	leftLeg = mult(leftLeg, scale(0.25,0.5,0.3));
+	leftLeg = mult(leftLeg, translate(-0.6,1.3,0));
+	gl.uniformMatrix4fv(mvLoc, gl.FALSE, flatten(leftLeg));	
+	gl.drawArrays(gl.TRIANGLES, 0, 36);
+	
+	var rightLeg = mult(mv, translate(x,y-2.2,z));
+	rightLeg = mult(rightLeg, scale(0.25,0.5,0.3));
+	rightLeg = mult(rightLeg, translate(0.6,1.3,0));
+	gl.uniformMatrix4fv(mvLoc, gl.FALSE, flatten(rightLeg));	
+	gl.drawArrays(gl.TRIANGLES, 0, 36);
+}
+
+function world()
+{
+		var skyBox = mult(mv, scale(42,42,42));
 	gl.uniformMatrix4fv(mvLoc, gl.FALSE, flatten(skyBox));
 	gl.drawArrays(gl.TRIANGLES, 0, 36);
 
@@ -347,4 +391,3 @@ function render()
         gl.uniform4fv(light[0].specular,white);
 	}	
 }
-
